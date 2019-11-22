@@ -19,6 +19,7 @@ io.sockets.on('connection', function(socket) {
     name,
     userName,
   }) {
+    console.log(`User ${userName} joined ${name}`);
     var room = io.sockets.adapter.rooms[name];
     var numClients = room ? Object.keys(room.sockets).length : 0;
     if (numClients === 0) {
@@ -46,6 +47,7 @@ io.sockets.on('connection', function(socket) {
     name,
     target
   }) {
+    console.log(`User name ${name} send offer to  ${target}`);
     io.sockets.to(roomName).emit('on_offer', {
       offer,
       name,
@@ -59,6 +61,7 @@ io.sockets.on('connection', function(socket) {
     target,
     name
   }) {
+    console.log(`User name ${name} send answer to  ${target}`);
     io.sockets.to(roomName).emit('on_answer', {
       answer,
       name,
