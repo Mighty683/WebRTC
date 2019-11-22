@@ -58,7 +58,7 @@ io.sockets.on('connection', function(socket) {
     target
   }) {
     io.sockets.to(name).emit('on_answer', {
-      offer,
+      answer,
       target
     });
   });
