@@ -4,23 +4,29 @@ var nodeStatic = require('node-static');
 var http = require('http');
 var socketIO = require('socket.io');
 var fileServer = new(nodeStatic.Server)();
+var PORT = 8080;
 
 var app = http.createServer(function(req, res) {
   fileServer.serve(req, res);
-}).listen(8080);
+}).listen(PORT);
+
 var io = socketIO.listen(app);
+
 io.sockets.on('connection', function(socket) {
+
   // convenience function to log server messages on the client
   function log() {
     var array = ['Message from server:'];
     array.push.apply(array, arguments);
     socket.emit('log', array);
   }
+
   socket.on('message', function(message) {
     log('Client said: ', message);
     // for a real app, would be room-only (not broadcast)
     socket.broadcast.emit('message', message);
   });
+
   socket.on('create or join', function(room) {
     log('Received request to create or join room ' + room);
     var clientsInRoom = io.sockets.adapter.rooms[room];
@@ -40,6 +46,7 @@ io.sockets.on('connection', function(socket) {
       socket.emit('full', room);
     }
   });
+
   socket.on('ipaddr', function() {
     var ifaces = os.networkInterfaces();
     for (var dev in ifaces) {
@@ -50,4 +57,5 @@ io.sockets.on('connection', function(socket) {
       });
     }
   });
+
 });
