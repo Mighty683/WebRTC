@@ -1,47 +1,32 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Bubble from './components/MainBubble';
 import Hello from './components/Hello';
-import { Modal } from '@material-ui/core';
-import {
-  connect
-} from './helper/socket';
+import Videos from './components/Videos';
+import Axios from 'axios';
+// import { Modal } from '@material-ui/core';
 import './App.css';
+
+const URL = 'https://bubble-tokbox.herokuapp.com/'
 
 
 
 function App() {
-  const [userName, setUserName] = useState('');
   const [users, setUsers] = useState([]);
-  const [streams, setStreams] = useState(new Map());
+  const [config, setConfig] = useState(null);
 
-  async function initConnection(userName) {
-    let response = await connect(userName, "room1", setUsers, setStreams)
-    setUserName(userName)
-    setUsers(Object.keys(response).map(key => ({
-      name: response[key].name
-    })))
-  }
-
-  function Videos ({streams}) {
-    if (streams.length) {
-      return (
-        <Modal open={true}>
-          <div>
-            {Array.from(streams.values()).map((value, index) => {
-              return <video key={index} ref={video => video.srcObject = value} />
-            })}
-          </div>
-        </Modal>
-      )
-    } else {
-      return false
+  useEffect(() => {
+    if (!config) {
+      Axios.get(`${URL}/room/main`).then((res) => {
+        setConfig(res.data)
+      });
     }
-  }
+  });
+
   return (
     <div className="App">
-      <Hello onChange={initConnection} />
-      {userName && <Bubble title="Appjobs" color="#f7a504" users={users}/>}
-      {<Videos streams={streams} />}
+      <Hello />
+        {users.length && <Bubble title="Appjobs" color="#f7a504" users={users}/>}
+      {config && <Videos config={config} />}
     </div>
   );
 }
