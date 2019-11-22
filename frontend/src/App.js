@@ -23,7 +23,6 @@ function App() {
   }
 
   function Videos ({streams}) {
-    console.log(streams)
     if (streams.length) {
       return (
         <Modal open={true}>

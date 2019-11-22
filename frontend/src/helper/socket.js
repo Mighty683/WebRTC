@@ -33,7 +33,11 @@ export async function connect(userName, roomName, onUsersUpdate, onStreamsUpdate
     socket.on("on_offer", async ({ offer, name, target }) => {
       if (target === userName) {
         const pc = new RTCPeerConnection(null);
-
+        pc.ontrack = (argument) => {
+          console.log(argument)
+          tracks.set(name, stream)
+          onStreamsUpdate(tracks);
+        }
         stream.getTracks().forEach(track => pc.addTrack(track, stream));
 
         pc.onnegotiationneeded = async e => {
@@ -42,12 +46,6 @@ export async function connect(userName, roomName, onUsersUpdate, onStreamsUpdate
           let answer = await pc.createAnswer();
           pc.setLocalDescription(new RTCSessionDescription(answer));
           pcs[name] = pc;
-          pcs[name].addEventListener('track', ({ e: {streams: [stream]}}) => {
-            console.log('dupa')
-            tracks.set(name, stream)
-            console.log(tracks, name, stream)
-            onStreamsUpdate(tracks);
-          })
           socket.emit("send_answer", {
             answer,
             roomName,
@@ -60,6 +58,7 @@ export async function connect(userName, roomName, onUsersUpdate, onStreamsUpdate
 
     socket.on("on_answer", async ({ answer, name, target }) => {
       if (target === userName) {
+        console.log(answer)
         pcs[name].setRemoteDescription(new RTCSessionDescription(answer));
       }
     });
