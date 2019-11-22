@@ -44,7 +44,7 @@ export default function Bubble ({ title, users }) {
       {!!containerSize && users.map((user, index) => {
       let step = 2 * Math.PI / users.length;
         return (<UserBubble
-          key={user.id}
+          key={user.name}
           color={getColor(color)}
           user={user}
           top={calculateX(container.current, step, index)}

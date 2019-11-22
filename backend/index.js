@@ -19,7 +19,6 @@ io.sockets.on('connection', function(socket) {
     name,
     userName,
   }) {
-    console.log(`User ${userName} joined ${name}`);
     var room = io.sockets.adapter.rooms[name];
     var numClients = room ? Object.keys(room.sockets).length : 0;
     if (numClients === 0) {
@@ -34,7 +33,10 @@ io.sockets.on('connection', function(socket) {
       RTCSessions[name][socket.id] = {
         name: userName,
       }
-      io.sockets.in(name).emit('on_join', userName);
+      io.sockets.in(name).emit('on_join', {
+        joined: userName,
+        all: RTCSessions[name]
+      });
       socket.join(name);
       socket.emit('joined', RTCSessions[name], socket.id);
       io.sockets.in(room).emit('ready');
