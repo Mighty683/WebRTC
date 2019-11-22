@@ -33,7 +33,7 @@ io.sockets.on('connection', function(socket) {
       RTCSessions[name][socket.id] = {
         name: userName,
       }
-      io.sockets.in(name).emit('on_join', RTCSessions[name][socket.id]);
+      io.sockets.in(name).emit('on_join', userName);
       socket.join(name);
       socket.emit('joined', RTCSessions[name], socket.id);
       io.sockets.in(room).emit('ready');
