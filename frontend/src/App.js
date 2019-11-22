@@ -43,7 +43,7 @@ function App() {
             <Draggable
               key={user.name}
             >
-              <div>
+              <div className="absolute">
                 <UserBubble
                   color={getColor(color)}
                   user={user}

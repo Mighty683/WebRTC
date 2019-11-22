@@ -3,6 +3,10 @@
   height: 100vh;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .main-container {
   background-color: #ff00ff;
 }
