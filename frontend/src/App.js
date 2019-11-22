@@ -5,6 +5,7 @@ import Videos from './components/Videos';
 import Axios from 'axios';
 // import { Modal } from '@material-ui/core';
 import './App.css';
+import Draggable from 'react-draggable';
 
 const URL = 'https://bubble-tokbox.herokuapp.com/'
 
@@ -30,8 +31,7 @@ function App() {
   return (
     <div className="App">
       {userName && <Hello onChange={setUserName} />}
-        {!userName && !!users.length && <Bubble color="#f7a504" users={users}/>}
-
+      {!userName && !!users.length && <Bubble users={users} />}
     </div>
   );
   //{config && <Videos config={config} />}
