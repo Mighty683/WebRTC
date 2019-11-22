@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import Bubble from './components/MainBubble';
+import './App.css';
+import React, { useState, useEffect, useRef } from 'react';
+import Draggable from 'react-draggable';
+import { getColor } from './helper/colors';
+import UserBubble from './components/UserBubble';
 import Hello from './components/Hello';
-import Videos from './components/Videos';
 import Axios from 'axios';
 // import { Modal } from '@material-ui/core';
-import './App.css';
-import Draggable from 'react-draggable';
+// import Videos from './components/Videos';
 
 const URL = 'https://bubble-tokbox.herokuapp.com/'
 
 
 
 function App() {
+  const color = "#fff";
+  const container = useRef();
   const [users, setUsers] = useState([{
     name: 'Tomek',
   }, {
@@ -29,9 +32,28 @@ function App() {
   });
 
   return (
-    <div className="App">
-      {userName && <Hello onChange={setUserName} />}
-      {!userName && !!users.length && <Bubble users={users} />}
+    <div className="App" ref={container}>
+      {!userName && <Hello onChange={setUserName} />}
+      {userName && container.current &&
+        <div style={{
+          height: container.current.offsetHeight,
+          width: container.current.offsetWidth
+        }} className="main-container">
+          {!userName && users.map((user) => 
+            <Draggable
+              key={user.name}
+            >
+              <div>
+                <UserBubble
+                  className="handle"
+                  color={getColor(color)}
+                  user={user}
+                />
+              </div>
+            </Draggable>)
+          }
+        </div>
+      }
     </div>
   );
   //{config && <Videos config={config} />}

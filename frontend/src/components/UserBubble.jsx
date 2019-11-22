@@ -8,7 +8,7 @@ export default function UserBubble ({ user: { name }, color }) {
       'backgroundColor': color
     }}>
       <div className="user">
-        {name}
+        <span>{name}</span>
       </div>
     </div>
   )
