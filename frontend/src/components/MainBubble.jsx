@@ -20,7 +20,6 @@ export default function Bubble ({ users }) {
         {container.current && users.map((user) => 
           <Draggable
             bounds="parent"
-            offsetParent={container.current}
             onStart={onStart}
             onStop={onStop}
             key={user.name}
