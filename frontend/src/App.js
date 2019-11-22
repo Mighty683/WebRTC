@@ -33,8 +33,8 @@ function App() {
 
   return (
     <div className="App" ref={container}>
-      {!userName && <Hello onChange={setUserName} />}
-      {userName && container.current &&
+      {userName && <Hello onChange={setUserName} />}
+      {container.current &&
         <div style={{
           height: container.current.offsetHeight,
           width: container.current.offsetWidth
@@ -45,7 +45,6 @@ function App() {
             >
               <div>
                 <UserBubble
-                  className="handle"
                   color={getColor(color)}
                   user={user}
                 />
