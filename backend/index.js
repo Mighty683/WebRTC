@@ -18,7 +18,6 @@ io.sockets.on('connection', function(socket) {
   socket.on('join_room', function({
     name,
     userName,
-    sessionDescription
   }) {
     var room = io.sockets.adapter.rooms[name];
     var numClients = room ? Object.keys(room.sockets).length : 0;
@@ -26,7 +25,6 @@ io.sockets.on('connection', function(socket) {
       RTCSessions[name] = {
         [socket.id]: {
           name: userName,
-          sessionDescription,
         }
       }
       socket.join(name);
@@ -34,12 +32,33 @@ io.sockets.on('connection', function(socket) {
     } else {
       RTCSessions[name][socket.id] = {
         name: userName,
-        sessionDescription,
       }
-      io.sockets.in(name).emit('join', socket.id);
+      io.sockets.in(name).emit('on_join', RTCSessions[name][socket.id]);
       socket.join(name);
       socket.emit('joined', RTCSessions[name], socket.id);
       io.sockets.in(room).emit('ready');
     }
+  });
+
+  socket.on('send_offer', function({
+    offer,
+    name,
+    target
+  }) {
+    io.sockets.to(name).emit('on_offer', {
+      offer,
+      target
+    });
+  });
+
+  socket.on('send_answer', function({
+    offer,
+    name,
+    target
+  }) {
+    io.sockets.to(name).emit('on_answer', {
+      offer,
+      target
+    });
   });
 });
