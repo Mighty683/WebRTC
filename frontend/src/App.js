@@ -13,7 +13,10 @@ function App() {
   async function initConnection(userName) {
     let response = await connect(userName)
     setUserName(userName)
-    console.log(response)
+    setUsers(Object.keys(response).map(key => ({
+      id: key,
+      name: response[key].name
+    })))
   }
 
   return (
