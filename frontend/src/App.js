@@ -1,26 +1,25 @@
-import React from 'react';
-import Bubble from './components/MainBubble'
+import React, { useState } from 'react';
+import Bubble from './components/MainBubble';
+import Hello from './components/Hello';
+import {
+  connect
+} from './helper/socket';
 import './App.css';
 
-const users = [
-  {
-    name: 'Artur',
-    id: 1,
-  },
-  {
-    name: 'Tomek',
-    id: 0,
-  },
-  {
-    name: 'Christian',
-    id: 2,
-  }
-]
-
 function App() {
+  const [userName, setUserName] = useState('');
+  const [users, setUsers] = useState([]);
+
+  async function initConnection(userName) {
+    let response = await connect(userName)
+    setUserName(userName)
+    console.log(response)
+  }
+
   return (
     <div className="App">
-      <Bubble title="Appjobs" color="#f7a504" users={users}/>
+      <Hello onChange={initConnection} />
+      {userName && <Bubble title="Appjobs" color="#f7a504" users={users}/>}
     </div>
   );
 }
