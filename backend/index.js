@@ -42,10 +42,11 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('send_offer', function({
     offer,
+    roomName,
     name,
     target
   }) {
-    io.sockets.to(name).emit('on_offer', {
+    io.sockets.to(roomName).emit('on_offer', {
       offer,
       name,
       target
@@ -53,12 +54,14 @@ io.sockets.on('connection', function(socket) {
   });
 
   socket.on('send_answer', function({
-    offer,
-    name,
-    target
+    answer,
+    roomName,
+    target,
+    name
   }) {
-    io.sockets.to(name).emit('on_answer', {
+    io.sockets.to(roomName).emit('on_answer', {
       answer,
+      name,
       target
     });
   });
