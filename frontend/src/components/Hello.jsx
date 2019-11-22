@@ -1,15 +1,22 @@
 import React, { useRef } from 'react';
 import { Input, Button } from '@material-ui/core';
+import Styled from '@emotion/styled'
+
+const HelloStyles = Styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+`;
 
 export default function Hello (props) {
   const inputRef = useRef();
   return (
-    <div>
+    <HelloStyles>
+      <h1>Bubble Team</h1>
       <Input ref={inputRef} />
       <Button onClick={() => {
-        console.log(inputRef)
         props.onChange(inputRef.current.children[0].value)
       }}>ENTER!</Button>
-    </div>
+    </HelloStyles>
   )
 }

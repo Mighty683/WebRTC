@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import UserBubble from './UserBubble';
 import { getColor } from '../helper/colors';
+import Draggable from 'react-draggable';
 import Styled from '@emotion/styled';
 
 function getContainerCenter (container) {
@@ -43,13 +44,16 @@ export default function Bubble ({ title, users }) {
       }
       {!!containerSize && users.map((user, index) => {
       let step = 2 * Math.PI / users.length;
-        return (<UserBubble
+        return (
+        <Draggable
           key={user.name}
-          color={getColor(color)}
-          user={user}
-          top={calculateX(container.current, step, index)}
-          left={calculateY(container.current, step, index)}
-        />)
+        >
+          <UserBubble
+            key={user.name}
+            color={getColor(color)}
+            user={user}
+          />
+        </Draggable>)
       })}
     </Container>
   );

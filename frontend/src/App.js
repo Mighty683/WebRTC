@@ -11,7 +11,12 @@ const URL = 'https://bubble-tokbox.herokuapp.com/'
 
 
 function App() {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([{
+    name: 'Tomek',
+  }, {
+    name: 'Artur'
+  }]);
+  const [userName, setUserName] = useState('')
   const [config, setConfig] = useState(null);
 
   useEffect(() => {
@@ -24,11 +29,12 @@ function App() {
 
   return (
     <div className="App">
-      <Hello />
-        {users.length && <Bubble title="Appjobs" color="#f7a504" users={users}/>}
-      {config && <Videos config={config} />}
+      {userName && <Hello onChange={setUserName} />}
+        {!userName && !!users.length && <Bubble color="#f7a504" users={users}/>}
+
     </div>
   );
+  //{config && <Videos config={config} />}
 }
 
 export default App;
