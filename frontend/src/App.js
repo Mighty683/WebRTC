@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { getColor } from './helper/colors';
 import UserBubble from './components/UserBubble';
 import Hello from './components/Hello';
@@ -13,12 +13,12 @@ const URL = 'https://bubble-tokbox.herokuapp.com'
 const WEB_API = 'https://bubbleteam.herokuapp.com/api'
 
 function getUserInitialPosition (container, index, numOfUsers) {
-  let step = Math.PI * 2 / numOfUsers;
+  let step = (Math.PI * 2) / numOfUsers;
   let x = container.offsetWidth / 2;
   let y = container.offsetHeight / 2;
   return {
-    x: x + (Math.sin(index * step ) * 100),
-    y: y + (Math.cos(index * step ) * 100)
+    x: x + (Math.cos(index * step ) * 50),
+    y: y + (Math.sin(index * step ) * 50)
   }
 }
 
@@ -43,15 +43,29 @@ function App() {
     })));
     setUserName(name);
     setRooms(roomsReponse.data);
+
+    setInterval(async () => {
+      if (config) return;
+      console.log('TOuCH')
+      let response = await Axios.post(`${WEB_API}/rooms/users`, {
+        userName
+      });
+      if (!config && response.data && response.data.length > 0) {
+        Axios.get(`${URL}/room/${response.data[0].name}`).then((res) => {
+          setConfig(res.data)
+        });
+      }
+    }, 1000)
   }
 
   async function onUserDrop (e, name) {
-    console.log(e, users.map(usr => usr.position))
+    if (config) return;
+    console.log(e)
     let touchedUser = users.find(user => {
-      console.log(Math.sqrt(
-        (e.screenX - user.position.x)**2 + (e.screenY - user.position.y)**2))
-      return user.name !== name && Math.sqrt(
-        (e.screenX - user.position.x)**2 + (e.screenY - user.position.y)**2) < 50
+      let distance = Math.sqrt(
+        (e.x - user.position.x)**2 + (e.y - user.position.y)**2)
+      console.log(distance)
+      return user.name !== name && distance < 100
     })
     let date = new Date()
     if (touchedUser) {
@@ -60,7 +74,7 @@ function App() {
         userName: name
       })
       let response = await Axios.post(`${WEB_API}/rooms`, {
-        roomName: 'Discussion',
+        roomName: date.toUTCString(),
         userName: touchedUser.name
       })
       users.splice(users.indexOf(touchedUser), 1)
@@ -78,7 +92,6 @@ function App() {
       }
     }
     setUsers(users)
-    console.log(e)
   }
 
   return (

@@ -8,7 +8,7 @@ export default function UserBubble ({ user: { name, position }, color, onClick, 
     <Draggable
       defaultPosition={position}
       bounds="parent"
-      onStop={(e) => onDrop && onDrop(e, name)}
+      onStop={(e, ui) => onDrop && onDrop(ui, name)}
     >
       <div className="bubble" style={{
         'backgroundColor': color
