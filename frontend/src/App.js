@@ -1,6 +1,5 @@
 import './App.css';
 import React, { useState, useEffect, useRef } from 'react';
-import Draggable from 'react-draggable';
 import { getColor } from './helper/colors';
 import UserBubble from './components/UserBubble';
 import Hello from './components/Hello';
@@ -8,7 +7,7 @@ import Axios from 'axios';
 // import { Modal } from '@material-ui/core';
 // import Videos from './components/Videos';
 
-const URL = 'https://bubble-tokbox.herokuapp.com/'
+const URL = 'https://bubble-tokbox.herokuapp.com'
 
 
 
@@ -31,25 +30,29 @@ function App() {
     }
   });
 
+
+  function onUserCreate (userName) {
+    Axios.post(`${URL}/api/users`, {
+      name: userName
+    }).then((user) => {
+      console.log(user)
+      setUserName(userName)
+    })
+  }
+
   return (
     <div className="App" ref={container}>
-      {userName && <Hello onChange={setUserName} />}
-      {container.current &&
+      {!userName && <Hello onChange={onUserCreate} />}
+      {userName && container.current &&
         <div style={{
           height: container.current.offsetHeight,
           width: container.current.offsetWidth
         }} className="main-container">
-          {!userName && users.map((user) => 
-            <Draggable
-              key={user.name}
-            >
-              <div className="absolute">
-                <UserBubble
-                  color={getColor(color)}
-                  user={user}
-                />
-              </div>
-            </Draggable>)
+          {!userName && users.map((user) =>
+            <UserBubble
+              color={getColor(color)}
+              user={user}
+            />)
           }
         </div>
       }
