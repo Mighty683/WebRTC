@@ -8,5 +8,8 @@
 }
 
 .main-container {
-  background-color: #ff00ff;
+  background-color: #f7a504;
+}
+.react-draggable-dragging {
+  z-index: 1000;
 }
