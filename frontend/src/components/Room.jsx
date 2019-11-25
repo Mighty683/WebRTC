@@ -1,22 +1,43 @@
-import React from 'react'
-import UserBubble from './UserBubble'
-import Draggable from 'react-draggable'
-import { getColor } from '../helper/colors'
+import React, { useEffect, useState} from 'react';
+import { connect } from '../helpers/socket';
 
-import './Room.sass'
+import User from './User'
 
-export default function Room ({ room: { name, users }, onDrop, color }) {
+export default function Room () {
+  const [connection, setConnection] = useState(false)
+  const [users, setUsers] = useState([])
+
+  function onNewUser (newUser) {
+    let userIndex = users.findIndex(user => user.id === newUser.id)
+    if (userIndex >= 0) {
+      setUsers([
+        ...users.slice(0, userIndex),
+        ...users.slice(userIndex, users.length)
+      ])
+    } else {
+      setUsers([
+        newUser
+      ])
+    }
+  }
+
+
+  async function connectAPI() {
+    if (!connection) {
+      console.log('Connection to Room')
+      await connect('room1', onNewUser)
+      console.log('Connected to Room')
+      setConnection(true)
+    }
+  }
+
+  useEffect(() => {
+    connectAPI()
+  })
+
   return (
-    <Draggable
-      bounds="parent"
-      onStop={(e) => {onDrop && onDrop(e, name)}}
-    >
-      <div className="room" style={{
-        backgroundColor: color
-      }}>
-        <div className="title">{name}</div>
-        {users && users.map(user => <UserBubble user={user} color={getColor(color)} />)}
-      </div>
-    </Draggable>
-  );
+    <div>
+      {users.map(user => <User key={user.id} user={user} />)}
+    </div>
+  )
 }

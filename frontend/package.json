@@ -3,13 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/core": "^10.0.22",
-    "@emotion/styled": "^10.0.23",
     "@material-ui/core": "^4.7.0",
-    "@opentok/client": "^2.16.3",
-    "axios": "^0.19.0",
-    "node-sass": "^4.13.0",
-    "opentok-react": "^0.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-draggable": "^4.1.0",
