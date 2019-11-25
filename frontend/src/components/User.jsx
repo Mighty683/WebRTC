@@ -6,17 +6,24 @@ export default function User ({
 }) {
   const videoRef = useRef()
   useEffect(() => {
-    console.log('Remote Streams:', user.peerConnection);
-    console.log('Connection State:', user.peerConnection.connectionState);
-    user.peerConnection.addEventListener('track', e => {
-      videoRef.current.srcObject = e.streams[0];
-    })
+    setInterval(() => {
+      console.log(user.peerConnection.getRemoteStreams())
+    }, 5000)
+    let [stream] = user.peerConnection.getRemoteStreams();
+    if (!stream) {
+      user.peerConnection.addEventListener('track', e => {
+        console.log('Added track!')
+        videoRef.current.srcObject = e.streams[0];
+      })
+    } else {
+      videoRef.current.srcObject = stream;
+    }
   })
   return (
     <Card>
       <div>
         {user.id}
-        <video ref={videoRef}/>
+        <video ref={videoRef} autoPlay />
       </div>
     </Card>
   )

@@ -36,12 +36,14 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('send_offer', function({
     offer,
+    candidate,
     roomName,
     target
   }) {
     console.log(`User name ${socket.id} send offer to  ${target}`);
     io.sockets.to(roomName).emit('on_offer', {
       offer,
+      candidate,
       id: socket.id,
       target
     });
@@ -55,6 +57,19 @@ io.sockets.on('connection', function(socket) {
     console.log(`User name ${socket.id} send answer to  ${target}`);
     io.sockets.to(roomName).emit('on_answer', {
       answer,
+      id: socket.id,
+      target
+    });
+  });
+
+  socket.on('send_ice_candidate', function({
+    candidate,
+    roomName,
+    target,
+  }) {
+    console.log(`User name ${socket.id} send ice candidate to ${target}`);
+    io.sockets.to(roomName).emit('on_ice_candidate', {
+      candidate,
       id: socket.id,
       target
     });
