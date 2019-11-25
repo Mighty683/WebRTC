@@ -27,41 +27,34 @@ export async function connect(roomName, onNewUser) {
 
       const pc = new RTCPeerConnection(null);
       const offer = await pc.createOffer();
-
-      pc.setLocalDescription(new RTCSessionDescription(offer));
       stream.getTracks().forEach(track => pc.addTrack(track, stream));
+      await pc.setLocalDescription(new RTCSessionDescription(offer));
 
       socket.emit("send_offer", {
         roomName,
         offer,
         target: id
       });
-      pendingConnections.set(id, pc)
+      pendingConnections.set(id, pc);
     });
 
     socket.on("on_offer", async ({ offer, id, target }) => {
       if (target === socket.id) {
         const pc = new RTCPeerConnection(null);
-        console.log(`Received offer from ${id}`)
-
         stream.getTracks().forEach(track => pc.addTrack(track, stream));
-
-        pc.onnegotiationneeded = async e => {
-          if (pc.signalingState !== "stable") return;
-          await pc.setRemoteDescription(offer);
-          let answer = await pc.createAnswer();
-          pc.setLocalDescription(new RTCSessionDescription(answer));
-          console.log(`Send answer to ${id}`)
-          socket.emit("send_answer", {
-            answer,
-            roomName,
-            target: id,
-          });
-          onNewUser({
-            id,
-            peerConnection: pc
-          })
-        }
+        await pc.setRemoteDescription(offer);
+        let answer = await pc.createAnswer();
+        pc.setLocalDescription(new RTCSessionDescription(answer));
+        console.log(`Send answer to ${id}`)
+        socket.emit("send_answer", {
+          answer,
+          roomName,
+          target: id,
+        });
+        onNewUser({
+          id,
+          peerConnection: pc
+        })
       }
     });
 

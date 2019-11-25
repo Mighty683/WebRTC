@@ -6,8 +6,7 @@ export default function User ({
 }) {
   const videoRef = useRef()
   useEffect(() => {
-    console.log(user.peerConnection.getRemoteStreams())
-    debugger;
+    console.log(user.peerConnection.getRemoteStreams());
     user.peerConnection.addEventListener('track', e => {
       videoRef.current.srcObject = e.streams[0];
     })
