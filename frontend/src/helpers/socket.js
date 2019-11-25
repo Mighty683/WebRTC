@@ -64,7 +64,7 @@ export async function connect(roomName, onNewUser) {
         let connection = pendingConnections.get(id)
         if (connection) {
           pendingConnections.delete(id)
-          connection.setRemoteDescription(new RTCSessionDescription(answer))
+          await connection.setRemoteDescription(new RTCSessionDescription(answer))
           onNewUser({
             id,
             peerConnection: connection
