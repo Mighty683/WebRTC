@@ -24,7 +24,9 @@ export default function Room () {
 
   async function connectAPI() {
     if (!connection) {
+      console.log('Connection to Room')
       await connect('room1', onNewUser)
+      console.log('Connected to Room')
       setConnection(true)
     }
   }

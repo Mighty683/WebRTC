@@ -22,9 +22,11 @@ io.sockets.on('connection', function(socket) {
     var numClients = room ? Object.keys(room.sockets).length : 0;
     if (numClients === 0) {
       socket.join(name);
+      console.log(`Room ${name} created by ${socket.id}`)
       socket.emit('joined', io.sockets.adapter.rooms[name].sockets, socket.id);
     } else {
       socket.join(name);
+      console.log(`${socket.id} joined ${name}`)
       socket.emit('joined', io.sockets.adapter.rooms[name].sockets, socket.id);
     }
     io.sockets.to(name).emit('on_join', {

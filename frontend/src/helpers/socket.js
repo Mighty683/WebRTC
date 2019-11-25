@@ -2,12 +2,16 @@ import io from "socket.io-client";
 
 const pendingConnections = new Map()
 
+const URL = "http://localhost:8080"
+
 // Join to room
 export async function connect(roomName, onNewUser) {
+  console.log(`Asking for devices`);
   const stream = await navigator.mediaDevices.getUserMedia({audio: true, video: true});
+  console.log(`Stream using ${stream}`);
   return new Promise(async (resolve, reject) => {
-    let socket = io("http://localhost:8080");
-
+    let socket = io(URL);
+    console.log(`Connection with: ${URL}`)
     // Confirmation of joining to room
     socket.on("joined", (sockets) => {
       console.log(sockets)
@@ -18,8 +22,8 @@ export async function connect(roomName, onNewUser) {
     socket.on("on_join", async ({
       id
     }) => {
-      console.log(`${id} joined Room`)
       if (id === socket.id) return;
+      console.log(`${id} joined Room`)
 
       const pc = new RTCPeerConnection(null);
       const offer = await pc.createOffer();
