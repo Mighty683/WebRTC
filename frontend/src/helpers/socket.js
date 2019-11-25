@@ -25,7 +25,8 @@ export async function connect(roomName, onNewUser) {
       if (id === socket.id) return;
       console.log(`${id} joined Room`)
 
-      const pc = new RTCPeerConnection(null);
+      const pc = new RTCPeerConnection([]);
+      pc.onconnectionstatechange = console.log
       const offer = await pc.createOffer();
       stream.getTracks().forEach(track => pc.addTrack(track, stream));
       await pc.setLocalDescription(new RTCSessionDescription(offer));
@@ -40,7 +41,8 @@ export async function connect(roomName, onNewUser) {
 
     socket.on("on_offer", async ({ offer, id, target }) => {
       if (target === socket.id) {
-        const pc = new RTCPeerConnection(null);
+        const pc = new RTCPeerConnection([]);
+        pc.onconnectionstatechange = console.log
         stream.getTracks().forEach(track => pc.addTrack(track, stream));
         await pc.setRemoteDescription(offer);
         let answer = await pc.createAnswer();
